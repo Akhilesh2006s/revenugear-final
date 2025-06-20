@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 export default function ComicBookReader() {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,40 +15,58 @@ export default function ComicBookReader() {
   const lastScrollTime = useRef(0)
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isHovered, setIsHovered] = useState(false)
-  const [enlargedPhoto, setEnlargedPhoto] = useState<string | null>(null)
+  const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null)
 
   const pages = [
     {
       title: "Page 1",
       leftPage: {
         background: "COVER2.png",
-        photos: ["1.png", "2.png"],
+        photos: [
+          { default: "1.png", hover: "1-hover.png" },
+          { default: "2.png", hover: "2-hover.png" },
+        ],
       },
       rightPage: {
         background: "COVER2.png",
-        photos: ["3.png", "4.png"],
+        photos: [
+          { default: "3.png", hover: "3-hover.png" },
+          { default: "4.png", hover: "4-hover.png" },
+        ],
       },
     },
     {
       title: "Page 2",
       leftPage: {
         background: "COVER2.png",
-        photos: ["5.png", "6.png"],
+        photos: [
+          { default: "5.png", hover: "5-hover.png" },
+          { default: "6.png", hover: "6-hover.png" },
+        ],
       },
       rightPage: {
         background: "COVER2.png",
-        photos: ["7.png", "8.png"],
+        photos: [
+          { default: "7.png", hover: "7-hover.png" },
+          { default: "8.png", hover: "8-hover.png" },
+        ],
       },
     },
     {
       title: "Page 3",
       leftPage: {
         background: "COVER2.png",
-        photos: ["9.png", "10.png"],
+        photos: [
+          { default: "9.png", hover: "9-hover.png" },
+          { default: "10.png", hover: "10-hover.png" },
+        ],
       },
       rightPage: {
         background: "COVER2.png",
-        photos: ["12.png", "13.png"],
+        photos: [
+          { default: "12.png", hover: "12-hover.png" },
+          { default: "13.png", hover: "13-hover.png" },
+        ],
       },
     },
   ]
@@ -120,10 +137,6 @@ export default function ComicBookReader() {
     setIsOpening(false)
   }
 
-  const handlePhotoClick = (photoUrl: string) => {
-    setEnlargedPhoto(photoUrl)
-  }
-
   const renderPage = (pageData: any, isLeft: boolean) => {
     if (!pageData) return null
 
@@ -138,30 +151,32 @@ export default function ComicBookReader() {
         <div className="absolute inset-0 bg-orange-50/10" />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-4 sm:gap-6 sm:p-8">
-          {pageData.photos.map((photo: string, index: number) => (
-            <div
-              key={index}
-              className="relative rounded-xl overflow-hidden shadow-xl cursor-pointer transition-all duration-500 hover:scale-125 hover:shadow-2xl hover:z-20 border-4 border-white/90 animate-fade-in-up group"
-              style={{ 
-                animationDelay: `${index * 0.2}s`,
-                maxWidth: "90%",
-                maxHeight: "40%",
-                minHeight: "150px",
-                transform: `rotate(${index % 2 === 0 ? 3 : -3}deg)`
-              }}
-              onClick={() => handlePhotoClick(photo)}
-            >
-              <img
-                src={photo || "/placeholder.png"}
-                alt="Comic Photo"
-                className="w-full h-full object-contain transition-all duration-300 group-hover:brightness-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute bottom-0 left-0 right-0 p-2 text-center text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
-                Click to enlarge
+          {pageData.photos.map((photo: any, index: number) => {
+            const photoKey = `${currentPage}-${isLeft ? "left" : "right"}-${index}`
+            const isHovered = hoveredPhoto === photoKey
+
+            return (
+              <div
+                key={index}
+                className="relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:brightness-110 border-4 border-white/90 animate-fade-in-up"
+                style={{
+                  animationDelay: `${index * 0.2}s`,
+                  maxWidth: "100%",
+                  maxHeight: "70%",
+                  minHeight: "250px",
+                  transform: `rotate(${index % 2 === 0 ? 3 : -3}deg)`,
+                }}
+                onMouseEnter={() => setHoveredPhoto(photoKey)}
+                onMouseLeave={() => setHoveredPhoto(null)}
+              >
+                <img
+                  src={photo.default || photo || "/placeholder.png"}
+                  alt="Comic Photo"
+                  className="w-full h-full object-contain transition-all duration-300"
+                />
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     )
@@ -169,29 +184,6 @@ export default function ComicBookReader() {
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-100 p-4 sm:p-8 md:p-20 pt-16 sm:pt-24 md:pt-32">
-      {/* Enlarged Photo Modal */}
-      <Dialog open={!!enlargedPhoto} onOpenChange={(open) => !open && setEnlargedPhoto(null)}>
-        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-transparent border-none overflow-hidden">
-          {enlargedPhoto && (
-            <div className="relative w-full h-full flex items-center justify-center p-2">
-              <img
-                src={enlargedPhoto}
-                alt="Enlarged Comic Photo"
-                className="max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] object-contain rounded-lg shadow-2xl"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setEnlargedPhoto(null)}
-                className="absolute top-2 right-2 w-8 h-8 rounded-full bg-orange-500/90 text-white shadow-lg z-30 hover:scale-110 hover:bg-orange-600 transition-all duration-200"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
       {/* Animated Heading */}
       <div className="mb-8 text-center">
         <h1
@@ -228,11 +220,7 @@ export default function ComicBookReader() {
           >
             <Card className="w-full sm:w-[400px] md:w-[500px] h-[500px] sm:h-[550px] md:h-[600px] shadow-2xl relative overflow-hidden border-4 border-orange-400 bg-white">
               <div className="absolute inset-0">
-                <img
-                  src="COVER.jpg"
-                  alt="Comic Book Cover"
-                  className="w-full h-full object-cover"
-                />
+                <img src="COVER.jpg" alt="Comic Book Cover" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-orange-900/70 via-transparent to-yellow-900/30"></div>
               </div>
               <div className="absolute inset-0 p-8 flex flex-col justify-end items-center text-white">
@@ -317,15 +305,7 @@ export default function ComicBookReader() {
             </div>
 
             {/* Close Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={closeBook}
-              className="absolute -top-10 sm:-top-12 -right-10 sm:-right-12 w-8 h-8 sm:w-10 sm:h-10 rounded-full text-white shadow-lg z-30 hover:scale-110 transition-all duration-200"
-              style={{ backgroundColor: "#FF8C00" }}
-            >
-              <X className="w-4 h-4 sm:w-5 sm:h-5" />
-            </Button>
+            
           </div>
         )}
       </div>
