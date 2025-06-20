@@ -7,6 +7,7 @@ import { useGLTF, Environment, PerspectiveCamera } from "@react-three/drei"
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion"
 import type { Group } from "three"
 import { Poppins, Inter } from "next/font/google"
+import { Brain } from "lucide-react"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -50,7 +51,7 @@ const brands: Brand[] = [
     logo: "brand-8.png",
   },
   {
-    logo: "brand9.png",
+    logo: "brand-9.png",
   },
   {
     logo: "brand-10.png",
@@ -288,124 +289,15 @@ const EnhancedStaggeredText = ({
   )
 }
 
-const StaggeredFlyText = ({
-  text,
-  className = "",
-  delay = 0,
-  staggerDelay = 0.03,
-  flyDirection = "up",
-  flyDistance = 50,
-  exitDelay = 0,
-}: {
-  text: string
-  className?: string
-  delay?: number
-  staggerDelay?: number
-  flyDirection?: "up" | "down" | "left" | "right"
-  flyDistance?: number
-  exitDelay?: number
-}) => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "-10% 0px -10% 0px" })
-  const letters = text.split("")
-
-  let initialX = 0
-  let initialY = 0
-  let exitX = 0
-  let exitY = 0
-
-  switch (flyDirection) {
-    case "up":
-      initialY = flyDistance
-      exitY = -flyDistance
-      break
-    case "down":
-      initialY = -flyDistance
-      exitY = flyDistance
-      break
-    case "left":
-      initialX = flyDistance
-      exitX = -flyDistance
-      break
-    case "right":
-      initialX = -flyDistance
-      exitX = flyDistance
-      break
-  }
-
-  return (
-    <div ref={ref} className={className}>
-      <AnimatePresence>
-        {isInView && (
-          <div className="inline-block">
-            {letters.map((letter, index) => (
-              <motion.span
-                key={index}
-                initial={{
-                  opacity: 0,
-                  x: initialX,
-                  y: initialY,
-                  scale: 0.5,
-                  rotateX: flyDirection === "up" || flyDirection === "down" ? -30 : 0,
-                  rotateY: flyDirection === "left" || flyDirection === "right" ? -30 : 0,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                  y: 0,
-                  scale: 1,
-                  rotateX: 0,
-                  rotateY: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: exitX,
-                  y: exitY,
-                  scale: 0.5,
-                  rotateX: flyDirection === "up" || flyDirection === "down" ? 30 : 0,
-                  rotateY: flyDirection === "left" || flyDirection === "right" ? 30 : 0,
-                  transition: {
-                    duration: 0.5,
-                    delay: exitDelay + (letters.length - index) * staggerDelay * 0.5,
-                    ease: [0.32, 0.72, 0, 1],
-                  },
-                }}
-                transition={{
-                  duration: 0.6,
-                  delay: delay + index * staggerDelay,
-                  ease: [0.215, 0.61, 0.355, 1],
-                }}
-                className="inline-block"
-                style={{
-                  transformOrigin: "center center",
-                  display: "inline-block",
-                  whiteSpace: "pre",
-                }}
-              >
-                {letter === " " ? "\u00A0" : letter}
-              </motion.span>
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
-
 function BrandLogo({ brand }: { brand: Brand }) {
   return (
     <div className="flex-shrink-0 mx-6 group cursor-pointer">
       <div className="relative overflow-hidden transition-all duration-300 hover:-translate-y-2">
         <img
-          src={brand.logo || "/placeholder.svg"}
-          alt={brand.name}
+          src={brand.logo || "logo.png"}
+          alt="Brand Logo"
           className="w-32 h-32 object-contain transition-all duration-300 group-hover:scale-110"
         />
-        <span
-          className={`absolute bottom-0 left-0 right-0 text-xs font-medium text-gray-800 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${inter.className}`}
-        >
-          {brand.name}
-        </span>
       </div>
     </div>
   )
@@ -561,85 +453,61 @@ export default function RevenueGearLanding() {
       </audio>
 
       {/* Navigation Header */}
-      <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-4 md:p-6 bg-white/20 backdrop-blur-xl border-b border-orange-200/30 shadow-lg"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{
-          opacity: 1,
-          y: scrollDirection === "down" ? -100 : 0,
-        }}
-        transition={{
-          duration: scrollDirection === "down" ? 0.3 : 0.6,
-          delay: scrollDirection === "down" ? 0 : 0.1,
-          ease: "easeInOut",
-        }}
-      >
-        <motion.div
-          className="flex items-center space-x-4"
-          whileHover={{ scale: 1.02 }}
-          transition={{ type: "spring", stiffness: 300 }}
-        >
-          <motion.div
-            className="flex items-center justify-center overflow-hidden rounded-xl bg-white/30 backdrop-blur-sm border border-orange-200/50 shadow-lg p-2"
-            whileHover={{
-              rotate: 360,
-              scale: 1.05,
-              boxShadow: "0 15px 40px rgba(255, 140, 0, 0.25)",
-            }}
-            transition={{ duration: 0.6 }}
-          >
-            <img
-              src="logo10.jpeg"
-              alt="Revenue Gear Logo"
-              className="w-16 h-10 md:w-20 md:h-10 lg:w-24 lg:h-14 object-contain"
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="hidden md:block"
-          >
-            
-          </motion.div>
-        </motion.div>
+    <motion.nav
+  className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-4 bg-transparent"
+  initial={{ opacity: 0, y: -30 }}
+  animate={{
+    opacity: 1,
+    y: scrollDirection === "down" ? -140 : 0,
+  }}
+  transition={{
+    duration: scrollDirection === "down" ? 0.3 : 0.6,
+    delay: scrollDirection === "down" ? 0 : 0.1,
+    ease: "easeInOut",
+  }}
+>
+  {/* Logo on the left */}
+  <motion.img
+    src="logo100.png"
+    alt="Revenue Gear Logo"
+    className="w-[150px] h-auto object-contain -translate-y-10"
+    whileHover={{
+      scale: 1.05,
+    }}
+    transition={{ duration: 0.4 }}
+  />
 
-        <motion.div
-          className="flex items-center space-x-4"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <motion.a
-            href="https://revlabs.tech/#contact"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`text-white px-6 py-3 md:px-8 md:py-4 rounded-full transition-all duration-300 font-semibold tracking-wide shadow-xl text-sm md:text-base relative overflow-hidden group ${poppins.className}`}
-            style={{
-              background: `linear-gradient(to right, #F9A01B, #F97316)`,
-            }}
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 20px 40px rgba(249, 160, 27, 0.4)",
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="relative z-10 flex items-center space-x-2">
-              <span>Contact Us</span>
-              <motion.svg
-                className="w-4 h-4 md:w-5 md:h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                whileHover={{ x: 3 }}
-                transition={{ duration: 0.2 }}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </motion.svg>
-            </span>
-          </motion.a>
-        </motion.div>
-      </motion.nav>
+  {/* Contact Us Button on the right */}
+  <motion.a
+    href="https://revlabs.tech/#contact"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold tracking-wide shadow-lg text-sm md:text-base transition-all  -translate-y-10"
+    style={{
+      background: `linear-gradient(to right, #F9A01B, #F97316)`,
+    }}
+    whileHover={{
+      scale: 1.05,
+      boxShadow: "0 10px 20px rgba(249, 160, 27, 0.4)",
+    }}
+    whileTap={{ scale: 0.95 }}
+  >
+    <span className="flex items-center space-x-2">
+      <span>Contact Us</span>
+      <motion.svg
+        className="w-4 h-4 md:w-5 md:h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        whileHover={{ x: 3 }}
+        transition={{ duration: 0.2 }}
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </motion.svg>
+    </span>
+  </motion.a>
+</motion.nav>
+
 
       {/* 3D Model Section */}
       <motion.div
@@ -656,48 +524,130 @@ export default function RevenueGearLanding() {
 
       {/* Scrollable Content */}
       <div className="relative z-10">
-        {/* Welcome Section - Enhanced Customer Text */}
-        <div className="h-screen flex flex-col items-center justify-start pt-32 px-8">
-          <div className="text-center mb-8 max-w-6xl">
-            {/* First Line - Enhanced Animation */}
-            <div className="mb-12 overflow">
-              <EnhancedStaggeredText
-                text="Customers never forget a bad experience at the dealership. 95% of calls go unreviewed where hidden revenue leaks occur."
-                className={`text-3xl font-bold tracking-tight sm:text-3xl md:text-2xl lg:text-4xl antialiased ${poppins.className}`}
-                style={{ color: "#743400" }}
-                flyDirection="left"
-                flyDistance={120}
-                staggerDelay={0.12}
-              />
-            </div>
+        {/* Hero Section */}
+        <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50/30 via-yellow-50/20 to-orange-50/30 overflow-hidden pt-20">
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-center lg:text-left"
+              >
+               
+                
 
-            {/* Quick Content Section */}
-            <div className="h-screen flex items-up justify-center">
-              <div className="text-center max-w-4xl px-8">
-                <FlyText delay={1.5} flyDirection="up" flyDistance={100} duration={0.4}>
-                  <p
-                    className={`text-lg md:text-xl lg:text-2xl leading-relaxed text-[#3A3D4B] font-light ${inter.className}`}
-                  >
-                    It's impossible to manually catch every revenue leak in call centers flooded with thousands of
-                    calls. RevenueGear's AI Agent provides visibility on 100% of customer calls—detecting churn risks,
-                    repeat complaints, and service issues across Indian and global languages.
-                  </p>
-                </FlyText>
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight"
+                >
+                  Customers never forget a bad experience at the dealership <br></br>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
+                    95% of calls go unreviewed where hidden revenue leaks occur.
+                  </span>
+                </motion.h1>
 
-                <FlyText delay={1.8} flyDirection="up" flyDistance={60} duration={0.4}>
-                  <p
-                    className={`text-lg md:text-xl lg:text-2xl leading-relaxed text-[#3A3D4B] font-light mt-8 ${inter.className}`}
-                  >
-                    Get an actionable hotlist of at-risk customers, plus voice of customer analytics and agent
-                    performance, playbook adherence for sales and service at vehicle dealerships.
-                  </p>
-                </FlyText>
-              </div>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-xl text-gray-600 mb-8 max-w-2xl"
+                >
+                  It's impossible to manually catch every revenue leak in call centers flooded with thousands of calls.
+                  RevenueGear's AI Agent provides visibility on 100% of customer calls—detecting churn risks, repeat
+                  complaints, and service issues across Indian and global languages.
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-xl text-gray-600 mb-8 max-w-2xl"
+                >
+                  Get an actionable hotlist of at-risk customers, plus voice of customer analytics and agent
+                  performance, playbook adherence for sales and service at vehicle dealerships.
+                </motion.p>
+
+                {/* Stats */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-gray-200"
+                ></motion.div>
+              </motion.div>
+
+              {/* Right Content - Animated Visualization */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+              >
+                <div className="relative bg-white rounded-3xl p-8 shadow-2xl border border-gray-100">
+                  <div className="space-y-6">
+                    {/* Waveform Animation */}
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                        <Brain size={24} className="text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-gray-900 mb-2">Live Call Analysis</div>
+                        <div className="flex items-center gap-1">
+                          {[...Array(20)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className="w-1 bg-gradient-to-t from-amber-500 to-orange-500 rounded-full"
+                              style={{ height: `${Math.random() * 40 + 10}px` }}
+                              animate={{ height: [`${Math.random() * 40 + 10}px`, `${Math.random() * 40 + 10}px`] }}
+                              transition={{ duration: 0.5, repeat: Number.POSITIVE_INFINITY, delay: i * 0.1 }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Insights */}
+                    <div className="space-y-3">
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1 }}
+                        className="flex items-center gap-3 p-3 bg-red-50 border border-red-200 rounded-lg"
+                      >
+                        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-red-700 font-medium">High churn risk detected</span>
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.2 }}
+                        className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg"
+                      >
+                        <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-amber-700 font-medium">Customer frustration: Medium</span>
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.4 }}
+                        className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg"
+                      >
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-green-700 font-medium">Service team alerted</span>
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
+        {/* Welcome Section */}
+      </div>
       {/* Trusted Brands Section */}
       <div className="relative z-10 py-20">
         <div className="text-center mb-16">
@@ -706,35 +656,21 @@ export default function RevenueGearLanding() {
               className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${poppins.className}`}
               style={{ color: "#743400" }}
             >
-              OUR CUSTOMER'S BRAND
+              OUR CUSTOMERS'S BRAND
             </h2>
           </FlyText>
         </div>
 
-        {/* Two-Line Brand Animation Container */}
+        {/* Single Line Brand Animation */}
         <div className="relative space-y-8 py-8">
-          {/* Top Row - Left to Right */}
           <div className="relative overflow-hidden">
             {/* Gradient Fade Effects */}
-            <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-yellow-50 to-transparent z-10"></div>
-            <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-yellow-50 to-transparent z-10"></div>
+            <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent z-10"></div>
+            <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-transparent via-white/20 to-transparent z-10"></div>
 
             <div className="flex animate-scroll-left">
               {[...brands, ...brands, ...brands].map((brand, index) => (
-                <BrandLogo key={`top-${brand.name}-${index}`} brand={brand} />
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom Row - Right to Left */}
-          <div className="relative overflow-hidden">
-            {/* Gradient Fade Effects */}
-            <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-yellow-50 to-transparent z-10"></div>
-            <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-yellow-50 to-transparent z-10"></div>
-
-            <div className="flex animate-scroll-right">
-              {[...brands, ...brands, ...brands].map((brand, index) => (
-                <BrandLogo key={`bottom-${brand.name}-${index}`} brand={brand} />
+                <BrandLogo key={`brand-${index}`} brand={brand} />
               ))}
             </div>
           </div>
