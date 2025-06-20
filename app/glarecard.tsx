@@ -1,155 +1,124 @@
 "use client"
 
-import { useState } from "react"
-import { GlareCard } from "@/components/ui/glare-card"
+import React from 'react'
+import { motion } from 'framer-motion'
 import {
   Globe,
   AlertTriangle,
-  FileCheck,
+  Tags,
   Phone,
-  Heart,
-  BarChart3,
-  Wrench,
   GaugeCircle,
+  BarChart3,
+  Zap,
+  Shield,
+  Clock,
+  Target,
   SearchCheck,
   Languages,
-  Briefcase,
-} from "lucide-react"
+  Wrench,
+  FileCheck,
+} from 'lucide-react'
 
-export default function StackedGlareCards() {
-  const [activeTab, setActiveTab] = useState(0)
-
+const Features: React.FC = () => {
   const features = [
     {
+      icon: Languages,
       title: "Understands Indian & International Languages",
-      shortTitle: "Languages",
-      description:
-        "From Hindi, Tamil, and Marathi to English and beyond—RevenueGear analyzes voice data across languages to uncover insights, no matter how your customers speak.",
-      icon: Globe,
+      description: "From Hindi, Tamil, and Marathi to English and beyond—RevenueGear analyzes voice data across languages to uncover insights, no matter how your customers speak.",
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
-      title: "Automatic Revenue Leak Classification",
-      shortTitle: "Revenue Leak",
-      description:
-        "AI auto-tags every call with churn risk, service issues, overcharging, delay, or escalation—no manual effort needed.",
       icon: AlertTriangle,
+      title: "Automatic Revenue Leak Classification",
+      description: "AI auto-tags every call with churn risk, service issues, overcharging, delay, or escalation—no manual effort needed.",
+      gradient: "from-red-500 to-pink-500"
     },
     {
+      icon: FileCheck,
       title: "Sales Intelligence",
-      shortTitle: "Sales",
-      description:
-        "Understand customer budget, urgency to buy, test drive feedback, comparisons with competitors, and missed follow-ups—so your team can close faster.",
-      icon: Briefcase,
+      description: "Understand customer budget, urgency to buy, test drive feedback, comparisons with competitors, and missed follow-ups—so your team can close faster.",
+      gradient: "from-purple-500 to-indigo-500"
     },
     {
-      title: "100% Visibility & Analysis on All Recorded Calls",
-      shortTitle: "Call Analysis",
-      description:
-        "Every single call is analyzed—outbound, inbound, Maintenance Reminders, PSFU—nothing is missed.",
       icon: SearchCheck,
+      title: "100% Visibility & Analysis on All Recorded Calls",
+      description: "Every single call is analyzed—outbound, inbound, Maintenance Reminders, PSFU—nothing is missed.",
+      gradient: "from-green-500 to-emerald-500"
     },
     {
-      title: "Customer Sentiment Score in Each Call",
-      shortTitle: "Sentiment Score",
-      description:
-        "Automatically detect tone and emotion to score every customer call—happy, neutral, or frustrated—at a glance.",
       icon: GaugeCircle,
+      title: "Customer Sentiment Score in Each Call",
+      description: "Automatically detect tone and emotion to score every customer call—happy, neutral, or frustrated—at a glance.",
+      gradient: "from-amber-500 to-orange-500"
     },
     {
-      title: "Voice of Customer Dashboard",
-      shortTitle: "Customer Dashboard",
-      description:
-        "Track positive and negative feedback, top complaint categories, sentiment trends, and team performance—all in one powerful view.",
       icon: BarChart3,
+      title: "Voice of Customer Dashboard",
+      description: "Track positive and negative feedback, top complaint categories, sentiment trends, and team performance—all in one powerful view.",
+      gradient: "from-teal-500 to-cyan-500"
     },
     {
-      title: "Service Insights",
-      shortTitle: "Service",
-      description:
-        "Identify at-risk customers, repeat complaints, poor service quality, and unresolved issues. Get a daily hotlist to prevent churn and improve NPS.",
       icon: Wrench,
-    },
+      title: "Service Insights",
+      description: "Identify at-risk customers, repeat complaints, poor service quality, and unresolved issues. Get a daily hotlist to prevent churn and improve NPS.",
+      gradient: "from-yellow-500 to-amber-500"
+    }
   ]
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-7xl">
-      {/* Tab Navigation */}
-      <div className="flex flex-wrap justify-center gap-4 mb-12 relative z-10">
-        {features.map((feature, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveTab(index)}
-            className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
-              activeTab === index
-                ? "bg-white/90 text-gray-800 hover:bg-white shadow-lg border border-orange-200"
-                : "text-white shadow-lg hover:shadow-xl border border-orange-300/50"
-            }`}
-            style={{
-              backgroundColor: activeTab === index ? undefined : "#FF8C00",
-            }}
-          >
-            {feature.shortTitle}
-          </button>
-        ))}
-      </div>
+    <section id="features" className="py-20 bg-transparent z-10 relative">
+      <div className="container mx-auto px-6 lg:px-8 z-10 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16 z-10 relative"
+        >
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            Powerful Features That{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
+              Protect Revenue
+            </span>
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Advanced AI capabilities designed specifically for vehicle dealerships
+          </p>
+        </motion.div>
 
-      {/* Stacked Cards */}
-      <div className="relative max-w-5xl mx-auto" style={{ height: "400px" }}>
-        {features.map((feature, index) => {
-          const isActive = index === activeTab
-          const stackIndex = index - activeTab
-          const isVisible = Math.abs(stackIndex) <= 2
-
-          return (
-            <div
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 z-10 relative">
+          {features.map((feature, index) => (
+            <motion.div
               key={index}
-              className={`absolute inset-0 transition-all duration-700 ease-out cursor-pointer ${
-                isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
-              style={{
-                zIndex: isActive ? 50 : Math.max(0, 50 - Math.abs(stackIndex)),
-                transform: `
-                  translateY(${stackIndex * 12}px) 
-                  translateX(${stackIndex * 8}px) 
-                  scale(${1 - Math.abs(stackIndex) * 0.05})
-                  rotateY(${stackIndex * 2}deg)
-                `,
-                transformOrigin: "center center",
-              }}
-              onClick={() => setActiveTab(index)}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="group bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer z-10 relative"
             >
-              <GlareCard
-                className="flex flex-row items-center justify-start p-12 h-full gap-8 w-full min-h-[350px]"
-                isHorizontal={true}
-              >
-                <div className="flex-shrink-0">
-                  <feature.icon className="h-16 w-16 text-gray-800" />
-                </div>
-                <div className="text-left flex-1">
-                  <h2 className="text-gray-800 font-bold text-4xl mb-4">{feature.title}</h2>
-                  <p className="text-gray-700 text-xl leading-relaxed">{feature.description}</p>
-                </div>
-              </GlareCard>
-            </div>
-          )
-        })}
-      </div>
+              <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                <feature.icon size={32} className="text-white" />
+              </div>
 
-      {/* Stack Indicator */}
-      <div className="flex justify-center mt-8 gap-2 relative z-10">
-        {features.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveTab(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
-              activeTab === index ? "bg-white shadow-lg hover:bg-gray-100 border border-orange-200" : "hover:shadow-md"
-            }`}
-            style={{
-              backgroundColor: activeTab === index ? undefined : "#FF8C00",
-            }}
-          />
-        ))}
+              <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-yellow-600 transition-colors">
+                {feature.title}
+              </h3>
+
+              <p className="text-gray-600 leading-relaxed">
+                {feature.description}
+              </p>
+
+              <div className="mt-6 flex items-center text-yellow-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                <span className="text-sm">Learn more</span>
+                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
+
+export default Features
